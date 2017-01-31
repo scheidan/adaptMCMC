@@ -3,11 +3,6 @@
 ##
 ## Description: test cases for adaptMCMC package
 ##
-## File: test_adaptMCMC.r
-## Path: c:/Users/scheidan/RonDisk/adaptMCMC/
-##
-## June 22, 2012 -- Andreas Scheidegger
-##
 ## andreas.scheidegger@eawag.ch
 ## =======================================================
 
@@ -29,10 +24,10 @@ S[lower.tri(S)] <- 1:sum(lower.tri(S))
 
 Sigma <- S%*%t(S)
 
-library(mnormt)
+library(mvtnorm)
 
 p.log <- function(x) {
-  dmnorm(x, means, Sigma, log=TRUE)
+  dmvnorm(x, means, Sigma, log=TRUE)
 }
 
 ## ----------------------
@@ -43,10 +38,10 @@ burn.in <- n/2
 
 samp <- MCMC(p.log, n, init=rep(0,d), acc.rate=0.234, adapt=TRUE)
 
-means
+## means
 colMeans(samp$samples[-(1:burn.in),])
 
-Sigma
+## Sigma
 round(var(samp$samples[-(1:burn.in),]),1)
 
 
@@ -69,4 +64,3 @@ Sigma
 samp[[1]]$acceptance.rate
 
 plot(convert.to.coda(samp))
-

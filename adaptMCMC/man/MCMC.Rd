@@ -17,50 +17,49 @@ MCMC(p, n, init, scale = rep(1, length(init)),
 
 \arguments{
   \item{p}{
-function that returns the log probability density to sample from. Must have two or more dimensions.
-}
+    function that returns the log probability density to sample from.
+  }
   \item{n}{
-number of samples.
-}
+    number of samples.
+  }
   \item{init}{
-vector with initial values.
-}
+    vector with initial values.
+  }
   \item{scale}{
-vector with the variances \emph{or} covariance matrix of the jump distribution.
-}
-   \item{adapt}{
- if \code{TRUE}, adaptive sampling is used, if \code{FALSE} classic metropolis
- sampling, if a positive integer the adaption stops after \code{adapt} iterations.
-}
+    vector with the variances \emph{or} covariance matrix of the jump distribution.
+  }
+  \item{adapt}{
+    if \code{TRUE}, adaptive sampling is used, if \code{FALSE} classic metropolis
+    sampling, if a positive integer the adaption stops after \code{adapt} iterations.
+  }
   \item{acc.rate}{
-desired acceptance rate (ignored if \code{adapt=FALSE})
-}
+    desired acceptance rate (ignored if \code{adapt=FALSE})
+  }
   \item{gamma}{
- controls the speed of adaption. Should be between 0.5 and 1. A lower
- gamma leads to faster adaption.
-}
+    controls the speed of adaption. Should be between 0.5 and 1. A lower
+    gamma leads to faster adaption.
+  }
   \item{list}{
-logical. If \code{TRUE} a list is returned otherwise only a matrix with the samples.
-}
+    logical. If \code{TRUE} a list is returned otherwise only a matrix with the samples.
+  }
   \item{n.start}{
-iteration where the adaption starts. Only internally used.
-}
+    iteration where the adaption starts. Only internally used.
+  }
   \item{\dots}{
-further arguments passed to \code{p}.
-}
+    further arguments passed to \code{p}.
+  }
 }
 \details{
 
- The algorithm tunes the covariance matrix of the (normal) jump
- distribution to achieve the desired acceptance rate. Classic
- (non-adaptive) Metropolis sampling can be obtained by setting \code{adapt=FALSE}.
+  The algorithm tunes the covariance matrix of the (normal) jump
+  distribution to achieve the desired acceptance rate. Classic
+  (non-adaptive) Metropolis sampling can be obtained by setting \code{adapt=FALSE}.
 
- Note, due to the calculation for the adaption steps the sampler is
- rather slow. However, with a suitable jump distribution good mixing can
- be observed with less samples. This is crucial if
-the computation of \code{p} is slow.
+  Note, due to the calculation for the adaption steps the sampler is
+  rather slow. However, with a suitable jump distribution good mixing can
+  be observed with less samples. This is crucial if
+  the computation of \code{p} is slow.
 
- The current implementation does not work for one-dimensional distributions.
 
 }
 \value{
@@ -72,28 +71,28 @@ the computation of \code{p} is slow.
   \item{n.sample}{number of generated samples}
   \item{acceptance.rate}{acceptance rate}
   \item{adaption}{either logical if adaption was used or not, or the
-  number of adaption steps.}
+    number of adaption steps.}
   \item{sampling.parameters}{a list with further sampling
-  parameters. Mainly used by \code{MCMC.add.samples()}.}
+    parameters. Mainly used by \code{MCMC.add.samples()}.}
 }
 
 \references{
-Vihola, M. (2011) Robust adaptive Metropolis algorithm with
-coerced acceptance rate. Statistics and Computing.
-[online] \url{http://www.springerlink.com/content/672270222w79h431/},
-(Accessed: May 16, 2012)
+  Vihola, M. (2011) Robust adaptive Metropolis algorithm with
+  coerced acceptance rate. Statistics and Computing.
+  [online] \url{http://www.springerlink.com/content/672270222w79h431/},
+  (Accessed: Jan 31, 2017)
 }
 
 \author{Andreas Scheidegger, \email{andreas.scheidegger@eawag.ch} or
   \email{scheidegger.a@gmail.com}.
-  
-Thanks to David Pleydell for spotting an error in the previous version.
+
+  Thanks to David Pleydell for spotting an error in the previous version.
 }
 
-\note{ Due to numerical errors it can happen that the computed
-covariance matrix is not positive definite. In such a case the nearest positive
-definite matrix is calculated with \code{nearPD()}
-of the package \pkg{Matrix}.
+\note{ Due to numerical errors it may happen that the computed
+  covariance matrix is not positive definite. In such a case the nearest positive
+  definite matrix is calculated with \code{nearPD()}
+  of the package \pkg{Matrix}.
 }
 
 \seealso{
@@ -119,11 +118,11 @@ p.log <- function(x) {
 
 ## 1) non-adaptive sampling
 samp.1 <- MCMC(p.log, n=200, init=c(0, 1), scale=c(1, 0.1),
-               adapt=FALSE)
+adapt=FALSE)
 
 ## 2) adaptive sampling
 samp.2 <- MCMC(p.log, n=200, init=c(0, 1), scale=c(1, 0.1),
-               adapt=TRUE, acc.rate=0.234)
+adapt=TRUE, acc.rate=0.234)
 
 
 ## ----------------------
@@ -152,5 +151,3 @@ image(x1, x2, exp(d.banana), col=cm.colors(60), asp=1, main="with adaption")
 contour(x1, x2, exp(d.banana), add=TRUE, col=gray(0.6))
 lines(samp.2$samples, type='b', pch=3)
 }
-
-

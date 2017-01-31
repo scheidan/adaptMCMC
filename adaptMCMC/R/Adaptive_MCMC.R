@@ -21,7 +21,7 @@ MCMC <- function(p, n, init, scale=rep(1, length(init)),
   if(adapt & !is.numeric(acc.rate)) stop('Argument "acc.rate" is missing!')
   if(gamma<0.5 | gamma>1) stop('Argument "gamma" must be between 0.5 and 1!')
 
-  
+
   ## number of adaption steps
   if(is.numeric(adapt)) n.adapt <- adapt
   if(adapt==TRUE) n.adapt <- Inf
@@ -40,14 +40,18 @@ MCMC <- function(p, n, init, scale=rep(1, length(init)),
   p.val[1] <- p(X[1,], ...)
 
   ## initial S
-  if(length(scale)==d) {
-    M <- diag(scale)
+  if(d>1) {
+    if(length(scale)==d) {
+      M <- diag(scale)
+    } else {
+      M <- scale
+    }
   } else {
-    M <- scale
+    M <- matrix(scale)
   }
+
   ## check
   if(ncol(M) != length(init)) stop("Length or dimension of 'init' and 'scale' do not match!")
-  if(length(init)==1) stop('One-dimensional sampling is not possible!')
 
   S <-  t(chol(M))
 
@@ -119,8 +123,8 @@ MCMC <- function(p, n, init, scale=rep(1, length(init)),
                 acceptance.rate=acceptance.rate,
                 adaption=adapt,
                 sampling.parameters=list(sample.density=p,
-                  acc.rate=acc.rate,
-                  gamma=gamma)
+                                         acc.rate=acc.rate,
+                                         gamma=gamma)
                 ) )
   } else {
     cat("Acceptance rate:", acceptance.rate, "\n")
@@ -247,5 +251,3 @@ convert.to.coda <- function(sample) {
         return(obj)
     }
 }
-
-
