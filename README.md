@@ -3,7 +3,7 @@ adaptMCMC
 
 R package that provides an implementation of the generic adaptive Monte Carlo Markov chain sampler proposed by Vihola (2011).
 
-# Geting started
+## Getting started
 
 ```R
 library(adaptMCMC)
@@ -23,11 +23,11 @@ p.log <- function(x) {
 
 ## 1) non-adaptive sampling
 samp.1 <- MCMC(p.log, n=200, init=c(0, 1), scale=c(1, 0.1),
-adapt=FALSE)
+               adapt=FALSE)
 
 ## 2) adaptive sampling
 samp.2 <- MCMC(p.log, n=200, init=c(0, 1), scale=c(1, 0.1),
-adapt=TRUE, acc.rate=0.234)
+               adapt=TRUE, acc.rate=0.234)
 
 
 ## ----------------------
