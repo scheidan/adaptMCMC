@@ -35,10 +35,14 @@ MCMC <- function(p, n, init, scale=rep(1, length(init)),
   colnames(X) <- names(init)
   X[1,] <- init
 
-  ## vector to store log densities p(x)
-  p.val <- rep(NA, n)
-  p.val[1] <- p(X[1,], ...)
-
+  p.val.init <- p(X[1, ], ...)
+  
+  ## matrix to store log densities p(x) and, eventually, additional values 
+  ## returned by the p(x), e.g. log-likelihood values. If p(x) returns a 
+  ## vector, the first element is the considered to be the posterior-value.
+  p.val <- matrix(NA, nrow = n, ncol=length(p.val.init))
+  p.val[1, ] <- p.val.init
+  
   ## initial S
   if(d>1) {
     if(length(scale)==d) {
@@ -76,18 +80,18 @@ MCMC <- function(p, n, init, scale=rep(1, length(init)),
     p.val.prop <- p(X.prop, ...)
 
     ## acceptance probability
-    alpha <- min(1, exp( p.val.prop - p.val[i-1] )) # for log density
+    alpha <- min(1, exp( p.val.prop[1] - p.val[i-1, 1] )) # for log density
 
     if(!is.finite(alpha)) alpha <- 0    # if zero divided by zero
 
     ## accept with P=alpha
     if(runif(1)<alpha) {
       X[i,] <- X.prop                   # accept
-      p.val[i] <- p.val.prop
+      p.val[i, ] <- p.val.prop
       k <- k+1
     } else {
       X[i,] <- X[i-1,]                  # or not
-      p.val[i] <- p.val[i-1]
+      p.val[i, ] <- p.val[i-1, ]
     }
 
     ## compute new S
@@ -117,7 +121,7 @@ MCMC <- function(p, n, init, scale=rep(1, length(init)),
 
   if(list) {
     return(list(samples=X,
-                log.p=p.val,
+                log.p=if(ncol(p.val) > 1) p.val else p.val[, 1],
                 cov.jump=M,
                 n.sample=n,
                 acceptance.rate=acceptance.rate,
@@ -164,8 +168,12 @@ MCMC.add.samples <- function(MCMC.object, n.update, ...) {
         MCMC.object$n.sample <- MCMC.object$n.sample + n.update
 
         MCMC.object$samples <- rbind(MCMC.object$samples, samp.update$samples)
-        MCMC.object$log.p <- c(MCMC.object$log.p, samp.update$log.p)
-
+        
+        if(is.matrix(MCMC.object$log.p)) {
+          MCMC.object$log.p <- rbind(MCMC.object$log.p, samp.update$log.p)
+        } else {
+          MCMC.object$log.p <- c(MCMC.object$log.p, samp.update$log.p)
+        }
         ## return the updated list
         return(MCMC.object)
     }
