@@ -55,7 +55,7 @@ plot(convert.to.coda(samp))
 
 
 samp <- MCMC.parallel(p.log, n, n.chain=5, n.cpu=5, init=rep(0,d),
-                      acc.rate=0.234, adapt=TRUE, packages='mnormt')
+                      acc.rate=0.234, adapt=TRUE, packages='mvtnorm')
 
 means
 

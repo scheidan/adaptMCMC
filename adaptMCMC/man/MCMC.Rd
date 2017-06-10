@@ -17,7 +17,10 @@ MCMC(p, n, init, scale = rep(1, length(init)),
 
 \arguments{
   \item{p}{
-    function that returns the log probability density to sample from.
+    function that returns the log probability density to sample from. Optionally,
+    the function can return a fixed size numerical vector containing the log
+    probability density as a first element and other values of interest as 
+    subsequent elements, e.g. the log-likelihood value.
   }
   \item{n}{
     number of samples.
@@ -67,7 +70,10 @@ MCMC(p, n, init, scale = rep(1, length(init)),
 
   If \code{list=TRUE} a list is returned with the following components:
   \item{samples}{matrix with samples}
-  \item{log.p}{vector with the (unnormalized) log density for each sample}
+  \item{log.p}{if the function p returns a single number, then a vector with the
+  (unnormalized) log density for each sample; otherwise,  a matrix containing 
+  the (unnormalized) log density as first colum and any other numerical column
+  retured by p.}
   \item{n.sample}{number of generated samples}
   \item{acceptance.rate}{acceptance rate}
   \item{adaption}{either logical if adaption was used or not, or the
