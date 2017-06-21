@@ -7,7 +7,16 @@
 ## =======================================================
 
 
-library(adaptMCMC)
+library(devtools)
+
+package.path = "adaptMCMC/"     # path must point to the folder containing the WaMaSim files
+
+## simulate a new package installation
+load_all(package.path)
+
+
+## run R CMD check
+## check(package.path)
 
 
 ## -------------------------------------------------------
@@ -31,17 +40,17 @@ p.log <- function(x) {
 }
 
 ## ----------------------
-## sampling oen chain
+## sampling one chain
 
-n <- 25000
+n <- 2500
 burn.in <- n/2
 
-samp <- MCMC(p.log, n, init=rep(0,d), acc.rate=0.234, adapt=TRUE)
+samp <- MCMC(p.log, n, init=rep(0,d), acc.rate=0.234, adapt=TRUE, showProgressBar=F)
 
-## means
+means
 colMeans(samp$samples[-(1:burn.in),])
 
-## Sigma
+Sigma
 round(var(samp$samples[-(1:burn.in),]),1)
 
 
@@ -54,8 +63,13 @@ plot(convert.to.coda(samp))
 ## sampling parallel
 
 
-samp <- MCMC.parallel(p.log, n, n.chain=5, n.cpu=5, init=rep(0,d),
-                      acc.rate=0.234, adapt=TRUE, packages='mnormt')
+n <- 2500
+burn.in <- n/2
+
+samp <- MCMC.parallel(p.log, n, n.chain=3, n.cpu=3, init=rep(0,d),
+                      acc.rate=0.234, adapt=TRUE, packages='mvtnorm')
+
+str(samp)
 
 means
 
@@ -64,3 +78,5 @@ Sigma
 samp[[1]]$acceptance.rate
 
 plot(convert.to.coda(samp))
+
+

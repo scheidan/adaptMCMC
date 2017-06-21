@@ -12,7 +12,7 @@ Implementation of the robust adaptive Metropolis sampler of Vihola (2011).
 \usage{
 MCMC(p, n, init, scale = rep(1, length(init)),
     adapt = !is.null(acc.rate), acc.rate = NULL, gamma = 0.5,
-    list = TRUE, n.start = 0, ...)
+    list = TRUE, showProgressBar=interactive(), n.start = 0, ...)
 }
 
 \arguments{
@@ -41,6 +41,9 @@ MCMC(p, n, init, scale = rep(1, length(init)),
   }
   \item{list}{
     logical. If \code{TRUE} a list is returned otherwise only a matrix with the samples.
+  }
+  \item{showProgressBar}{
+    logical. If \code{TRUE} a progress bar is shown.
   }
   \item{n.start}{
     iteration where the adaption starts. Only internally used.

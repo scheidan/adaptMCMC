@@ -2,8 +2,8 @@ Package: adaptMCMC
 Type: Package
 Title: Implementation of a generic adaptive Monte Carlo Markov Chain
         sampler
-Version: 1.1.2
-Date: 2017-01-31
+Version: 1.1.3
+Date: 2017-06-21
 Author: Andreas Scheidegger, <andreas.scheidegger@eawag.ch>, <scheidegger.a@gmail.com>
 Maintainer: Andreas Scheidegger <andreas.scheidegger@eawag.ch>
 Description: This package provides an implementation of the generic adaptive Monte
@@ -11,3 +11,4 @@ Description: This package provides an implementation of the generic adaptive Mon
 License: GPL (>= 2)
 LazyLoad: yes
 Depends: R (>= 2.14.1), parallel, coda, Matrix
+RoxygenNote: 6.0.1

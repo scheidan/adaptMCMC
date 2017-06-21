@@ -8,14 +8,15 @@
 ## [online] http://www.springerlink.com/content/672270222w79h431/
 ## (Accessed December 8, 2011).
 
-## Version 1.1
+## Version 1.1.3
 
-## June 22, 2012 -- Andreas Scheidegger
+## June 21, 2017 -- Andreas Scheidegger
 ## =======================================================
 
 
 MCMC <- function(p, n, init, scale=rep(1, length(init)),
-                 adapt=!is.null(acc.rate), acc.rate=NULL, gamma=0.5, list=TRUE, n.start=0, ...) {
+                 adapt=!is.null(acc.rate), acc.rate=NULL, gamma=0.5, list=TRUE,
+                 showProgressBar=interactive(), n.start=0, ...) {
 
   ## checks
   if(adapt & !is.numeric(acc.rate)) stop('Argument "acc.rate" is missing!')
@@ -57,13 +58,15 @@ MCMC <- function(p, n, init, scale=rep(1, length(init)),
 
   ## initialize progress bar
   cat('  generate', n, 'samples \n')
-  pb <- txtProgressBar(min=0, max=n, style=3)
+  if(showProgressBar){
+    pb <- txtProgressBar(min=0, max=n, style=3)
+  }
   update.step <- max(5, floor(n/100))
 
   k <- 0
   for(i in 2:n){
 
-    if(i %% update.step == 0) {
+    if(showProgressBar && i %% update.step == 0) {
       setTxtProgressBar(pb, i)
     }
 
@@ -110,8 +113,10 @@ MCMC <- function(p, n, init, scale=rep(1, length(init)),
     }
   }
 
-  close(pb)                             #close progress bar
-
+  if(showProgressBar){
+    close(pb)                             #close progress bar
+  }
+  
   ## calculate accpetance rate
   acceptance.rate <- round(k/(n-1), 3)
 
@@ -140,51 +145,49 @@ MCMC <- function(p, n, init, scale=rep(1, length(init)),
 
 MCMC.add.samples <- function(MCMC.object, n.update, ...) {
 
-    ## if single chain
-    if(!is.null(names(MCMC.object))) {
-        if(is.matrix(MCMC.object)) stop("Only MCMC objects generated with option 'list=TRUE' can be updated!")
+  ## if single chain
+  if(!is.null(names(MCMC.object))) {
+    if(is.matrix(MCMC.object)) stop("Only MCMC objects generated with option 'list=TRUE' can be updated!")
 
-        ## get values from last sampling
-        p <- MCMC.object$sampling.parameters$sample.density
-        init <- MCMC.object$samples[nrow(MCMC.object$samples),]
-        scale <- MCMC.object$cov.jump
-        acc.rate <- MCMC.object$sampling.parameters$acc.rate
-        gamma <- MCMC.object$sampling.parameters$gamma
-        n.before <- MCMC.object$n.sample    # number of existing samples
-        adapt <- MCMC.object$adaption
+    ## get values from last sampling
+    p <- MCMC.object$sampling.parameters$sample.density
+    init <- MCMC.object$samples[nrow(MCMC.object$samples),]
+    scale <- MCMC.object$cov.jump
+    acc.rate <- MCMC.object$sampling.parameters$acc.rate
+    gamma <- MCMC.object$sampling.parameters$gamma
+    n.before <- MCMC.object$n.sample    # number of existing samples
+    adapt <- MCMC.object$adaption
 
-        ## generate new samples
-        samp.update <- MCMC(p=p, n=n.update, init=init, scale=scale,  adapt=adapt, acc.rate=acc.rate,
-                            gamma=gamma, list=TRUE, n.start=n.before, ...)
+    ## generate new samples
+    samp.update <- MCMC(p=p, n=n.update, init=init, scale=scale,  adapt=adapt, acc.rate=acc.rate,
+                        gamma=gamma, list=TRUE, n.start=n.before, ...)
 
-        ## update old sampling object
-        MCMC.object$cov.jump <- samp.update$cov.jump
-        m <- c(MCMC.object$n.sample, samp.update$n.sample)
-        MCMC.object$acceptance.rate <-  1/sum(m)*(m[1]*MCMC.object$acceptance.rate + m[2]*samp.update$acceptance.rate)
-        MCMC.object$n.sample <- MCMC.object$n.sample + n.update
+    ## update old sampling object
+    MCMC.object$cov.jump <- samp.update$cov.jump
+    m <- c(MCMC.object$n.sample, samp.update$n.sample)
+    MCMC.object$acceptance.rate <-  1/sum(m)*(m[1]*MCMC.object$acceptance.rate + m[2]*samp.update$acceptance.rate)
+    MCMC.object$n.sample <- MCMC.object$n.sample + n.update
 
-        MCMC.object$samples <- rbind(MCMC.object$samples, samp.update$samples)
-        MCMC.object$log.p <- c(MCMC.object$log.p, samp.update$log.p)
+    MCMC.object$samples <- rbind(MCMC.object$samples, samp.update$samples)
+    MCMC.object$log.p <- c(MCMC.object$log.p, samp.update$log.p)
 
-        ## return the updated list
-        return(MCMC.object)
-    }
+    ## return the updated list
+    return(MCMC.object)
+  }
 
-    ## if list of chains
-    if(is.null(names(MCMC.object))) {
-        ## recursive call of MCMC.add.samples() to update single chains
-        MCMC.object <- lapply(MCMC.object, function(x) MCMC.add.samples(x, n.update=n.update, ...))
-        return(MCMC.object)
-    }
+  ## if list of chains
+  if(is.null(names(MCMC.object))) {
+    ## recursive call of MCMC.add.samples() to update single chains
+    MCMC.object <- lapply(MCMC.object, function(x) MCMC.add.samples(x, n.update=n.update, ...))
+    return(MCMC.object)
+  }
 }
 
 ## ----------------------
 ## Wrapper for parallel calculation of independent chains
 MCMC.parallel <- function(p, n, init, n.chain=4, n.cpu, packages=NULL, dyn.libs=NULL,
                           scale=rep(1, length(init)), adapt=!is.null(acc.rate),
-                          acc.rate=NULL, gamma=0.55, list=TRUE, ...) {
-
-  require(parallel)
+                          acc.rate=NULL, gamma=0.5, list=TRUE, ...) {
 
   ## initialisation of (local) parallel computing
   cl <- makeCluster(min(n.cpu, detectCores()))
@@ -205,21 +208,20 @@ MCMC.parallel <- function(p, n, init, n.chain=4, n.cpu, packages=NULL, dyn.libs=
 
   ## wrapper function to be called in parallel
   MCMC.wrap <- function(x, ...) {
-      require(Matrix)
-      if(!is.null(packages)) sapply(packages, function(x) require(x, character.only=TRUE))
-      ## load and unload dynamic libraries
-      if (!is.null(dyn.libs)) {
-          sapply(dyn.libs, function(x) dyn.load(paste(wd, x, sep = "/")))
-          on.exit( sapply(dyn.libs, function(x) dyn.unload(paste(wd, x, sep = "/"))) )
-      }
-      MCMC(...)
+    if(!is.null(packages)) sapply(packages, function(x) require(x, character.only=TRUE))
+    ## load and unload dynamic libraries
+    if (!is.null(dyn.libs)) {
+      sapply(dyn.libs, function(x) dyn.load(paste(wd, x, sep = "/")))
+      on.exit( sapply(dyn.libs, function(x) dyn.unload(paste(wd, x, sep = "/"))) )
+    }
+    MCMC(...)
   }
 
 
   ## sample n chains in parallel
   result <- clusterApply(cl, 1:n.chain, MCMC.wrap, p=p, n=n, init=init,
-                        scale=scale,  adapt=adapt, acc.rate=acc.rate,
-                        gamma=gamma, list=list, ...)
+                         scale=scale,  adapt=adapt, acc.rate=acc.rate,
+                         gamma=gamma, list=list, ...)
 
   return(result)
 
@@ -230,24 +232,24 @@ MCMC.parallel <- function(p, n, init, n.chain=4, n.cpu, packages=NULL, dyn.libs=
 ## converts a sample into coda object
 
 convert.to.coda <- function(sample) {
-    ## if single chain
-    if(!is.null(names(sample))) {
-        if(is.matrix(sample)) {
-            obj <- coda::mcmc(sample)
-        }
-        if(is.list(sample)) {
-            obj <- coda::mcmc(sample$samples)
-        }
-        return(obj)
-    } else {
-
-        ## if sample is a list of chains
-        if(is.matrix(sample[[1]])) {
-            obj <- as.mcmc.list(lapply(sample, coda::mcmc))
-        }
-        if(is.list(sample[[1]])) {
-            obj <- as.mcmc.list(lapply(sample, function(x) {coda::mcmc(x$samples)}))
-        }
-        return(obj)
+  ## if single chain
+  if(!is.null(names(sample))) {
+    if(is.matrix(sample)) {
+      obj <- coda::mcmc(sample)
     }
+    if(is.list(sample)) {
+      obj <- coda::mcmc(sample$samples)
+    }
+    return(obj)
+  } else {
+
+    ## if sample is a list of chains
+    if(is.matrix(sample[[1]])) {
+      obj <- as.mcmc.list(lapply(sample, coda::mcmc))
+    }
+    if(is.list(sample[[1]])) {
+      obj <- as.mcmc.list(lapply(sample, function(x) {coda::mcmc(x$samples)}))
+    }
+    return(obj)
+  }
 }
