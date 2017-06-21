@@ -17,7 +17,9 @@ MCMC(p, n, init, scale = rep(1, length(init)),
 
 \arguments{
   \item{p}{
-    function that returns the log probability density to sample from.
+    function that returns a value proportional to the log probability
+    density to sample from. Alternatively the function can return a list
+    with at least one element named \code{log.density}. See details below.
   }
   \item{n}{
     number of samples.
@@ -63,6 +65,11 @@ MCMC(p, n, init, scale = rep(1, length(init)),
   be observed with less samples. This is crucial if
   the computation of \code{p} is slow.
 
+  In some cases the function \code{p} may not only calculate the log
+  density but return a list containing also other values. For example
+  if \code{p} is a log posterior one may be also interested to store
+  the corresponding prior and likelihood values.
+
 
 }
 \value{
@@ -76,7 +83,9 @@ MCMC(p, n, init, scale = rep(1, length(init)),
   \item{adaption}{either logical if adaption was used or not, or the
     number of adaption steps.}
   \item{sampling.parameters}{a list with further sampling
-    parameters. Mainly used by \code{MCMC.add.samples()}.}
+    parameters. Mainly used by \code{MCMC.add.samples()}}.
+  \item{extra.values}{A list containing the lists provided by \code{p}.
+    Only if \code{p} provides a list.}
 }
 
 \references{
@@ -153,4 +162,32 @@ lines(samp.1$samples, type='b', pch=3)
 image(x1, x2, exp(d.banana), col=cm.colors(60), asp=1, main="with adaption")
 contour(x1, x2, exp(d.banana), add=TRUE, col=gray(0.6))
 lines(samp.2$samples, type='b', pch=3)
+
+
+
+## ----------------------
+## function returning extra information in a list
+
+
+p.log.list <- function(x) {
+  B <- 0.03                              # controls 'bananacity'
+  log.density <- -x[1]^2/200 - 1/2*(x[2]+B*x[1]^2-100*B)^2
+
+  result <- list(log.density=log.density)
+
+  ## under some conditions one may want to return other infos
+  if(x[1]<0) {
+    result$message <- "Attention x[1] is negative!"
+    result$x <- x[1]
+  }
+
+  result
+}
+
+samp.list <- MCMC(p.log.list, n=200, init=c(0, 1), scale=c(1, 0.1),
+                  adapt=TRUE, acc.rate=0.234)
+
+## the additional values are stored under `extras.values`
+head(samp.list$extras.values)
+
 }

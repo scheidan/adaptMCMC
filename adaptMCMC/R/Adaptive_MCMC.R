@@ -38,7 +38,24 @@ MCMC <- function(p, n, init, scale=rep(1, length(init)),
 
   ## vector to store log densities p(x)
   p.val <- rep(NA, n)
-  p.val[1] <- p(X[1,], ...)
+
+  val <- p(X[1,], ...)
+  if(is.list(val)) {
+    returns.list <- TRUE
+    extras <- list()                    # list to store additional return values of p
+    if(!"log.density" %in% names(val)) {
+      stop("The list returned by 'p' must conatin an lement named 'log.density!'")
+    }
+    if(length(val$log.density)>1) stop("The 'log.density' must be a scalar value!")
+    
+    p.val[1] <- val$log.density
+    extras[[1]] <- val["log.density" != names(val)]
+    
+  } else {
+    returns.list <- FALSE
+    if(length(val)>1) stop("The 'p' must return a scalar value!")
+    p.val[1] <- val
+  }
 
   ## initial S
   if(d>1) {
@@ -76,8 +93,14 @@ MCMC <- function(p, n, init, scale=rep(1, length(init)),
     names(X.prop) <- names(init)
 
     ## calculate density at X.prop
-    p.val.prop <- p(X.prop, ...)
-
+    val <- p(X.prop, ...)
+    if(returns.list) {
+      p.val.prop <- val$log.density
+      extras.prop <- val["log.density" != names(val)]
+    } else {
+      p.val.prop <- val
+    }
+    
     ## acceptance probability
     alpha <- min(1, exp( p.val.prop - p.val[i-1] )) # for log density
 
@@ -87,10 +110,16 @@ MCMC <- function(p, n, init, scale=rep(1, length(init)),
     if(runif(1)<alpha) {
       X[i,] <- X.prop                   # accept
       p.val[i] <- p.val.prop
+      if(returns.list) {
+        extras[[i]] <- extras.prop
+      }
       k <- k+1
     } else {
       X[i,] <- X[i-1,]                  # or not
       p.val[i] <- p.val[i-1]
+      if(returns.list) {
+        extras[[i]] <- extras[[i-1]]
+      }
     }
 
     ## compute new S
@@ -121,7 +150,7 @@ MCMC <- function(p, n, init, scale=rep(1, length(init)),
   acceptance.rate <- round(k/(n-1), 3)
 
   if(list) {
-    return(list(samples=X,
+    res <- list(samples=X,
                 log.p=p.val,
                 cov.jump=M,
                 n.sample=n,
@@ -130,7 +159,11 @@ MCMC <- function(p, n, init, scale=rep(1, length(init)),
                 sampling.parameters=list(sample.density=p,
                                          acc.rate=acc.rate,
                                          gamma=gamma)
-                ) )
+                )
+    if(returns.list) {
+      res$extras.values = extras
+    }
+    return(res)
   } else {
     cat("Acceptance rate:", acceptance.rate, "\n")
     return(X)

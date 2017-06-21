@@ -39,20 +39,39 @@ p.log <- function(x) {
   dmvnorm(x, means, Sigma, log=TRUE)
 }
 
+p.log.list <- function(x) {
+  if(x[1]<0) {
+    return (list(log.density=dmvnorm(x, means, Sigma, log=TRUE), x=x))
+  } else {
+    return (list(log.density=dmvnorm(x, means, Sigma, log=TRUE), x=x, extra="positive!"))
+  } 
+}
+
+p.log.error <- function(x) {
+  c(dmvnorm(x, means, Sigma, log=TRUE), 1)
+}
+
+
 ## ----------------------
 ## sampling one chain
 
 n <- 2500
 burn.in <- n/2
 
-samp <- MCMC(p.log, n, init=rep(0,d), acc.rate=0.234, adapt=TRUE, showProgressBar=F)
+samp <- MCMC(p.log, n, init=rep(0,d), acc.rate=0.234, adapt=TRUE, showProgressBar=T)
+str(samp)
+
+samp <- MCMC(p.log.list, n, init=rep(0,d), acc.rate=0.234, adapt=TRUE, showProgressBar=T)
+str(samp)
+
+samp <- MCMC(p.log.error, n, init=rep(0,d), acc.rate=0.234, adapt=TRUE, showProgressBar=T)
+
 
 means
 colMeans(samp$samples[-(1:burn.in),])
 
 Sigma
 round(var(samp$samples[-(1:burn.in),]),1)
-
 
 samp$acceptance.rate
 
@@ -71,12 +90,10 @@ samp <- MCMC.parallel(p.log, n, n.chain=3, n.cpu=3, init=rep(0,d),
 
 str(samp)
 
-means
 
-Sigma
+samp <- MCMC.parallel(p.log.list, n, n.chain=3, n.cpu=3, init=rep(0,d),
+                      acc.rate=0.234, adapt=TRUE, packages='mvtnorm')
 
-samp[[1]]$acceptance.rate
-
-plot(convert.to.coda(samp))
+str(samp)
 
 

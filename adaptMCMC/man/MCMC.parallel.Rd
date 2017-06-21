@@ -17,7 +17,9 @@ MCMC.parallel(p, n, init, n.chain = 4, n.cpu, packages = NULL, dyn.libs=NULL,
 
 \arguments{
   \item{p}{
-    function that returns the log probability density to sample from. Must have two or more dimensions.
+    function that returns a value proportional to the log probability
+    density to sample from. Alternatively the function can return a list
+    with at least one element named \code{log.density}.
   }
   \item{n}{
     number of samples.

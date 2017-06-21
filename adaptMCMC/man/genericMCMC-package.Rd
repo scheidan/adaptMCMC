@@ -13,7 +13,7 @@ Carlo Markov chain sampler proposed by Vihola (2011).
 \tabular{ll}{
 Package: \tab adaptMCMC\cr
 Type: \tab Package\cr
-Version: \tab 1.1.3\cr
+Version: \tab 1.2\cr
 Date: \tab 2017-06-21\cr
 License: \tab GPL (>= 2)\cr
 LazyLoad: \tab yes\cr
