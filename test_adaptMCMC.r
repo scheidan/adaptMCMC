@@ -18,6 +18,8 @@ load_all(package.path)
 ## run R CMD check
 ## check(package.path)
 
+## build(package.path)
+
 
 ## -------------------------------------------------------
 ## multi variate normal
