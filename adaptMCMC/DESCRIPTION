@@ -1,13 +1,11 @@
 Package: adaptMCMC
 Type: Package
-Title: Implementation of a generic adaptive Monte Carlo Markov Chain
-        sampler
+Title: Implementation of a Generic Adaptive Monte Carlo Markov Chain Sampler
 Version: 1.2
 Date: 2017-06-21
 Author: Andreas Scheidegger, <andreas.scheidegger@eawag.ch>, <scheidegger.a@gmail.com>
 Maintainer: Andreas Scheidegger <andreas.scheidegger@eawag.ch>
-Description: This package provides an implementation of the generic adaptive Monte
-	     Carlo Markov chain sampler proposed by Vihola (2011).
+Description: Enables sampling from arbitrary distributions if the log density is known up to a constant; a common situation in the context of Bayesian inference. The implemented sampling algorithm proposed by Vihola (2011) achieves often a high efficiency by tuning the proposal distributions to a user defined acceptance rate.
 License: GPL (>= 2)
 LazyLoad: yes
 Depends: R (>= 2.14.1), parallel, coda, Matrix
