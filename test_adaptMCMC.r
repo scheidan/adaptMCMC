@@ -61,9 +61,11 @@ n <- 2500
 burn.in <- n/2
 
 samp <- MCMC(p.log, n, init=rep(0,d), acc.rate=0.234, adapt=TRUE, showProgressBar=T)
+samp <- MCMC.add.samples(samp, 500)
 str(samp)
 
 samp <- MCMC(p.log.list, n, init=rep(0,d), acc.rate=0.234, adapt=TRUE, showProgressBar=T)
+samp <- MCMC.add.samples(samp, 500)
 str(samp)
 
 samp <- MCMC(p.log.error, n, init=rep(0,d), acc.rate=0.234, adapt=TRUE, showProgressBar=T)

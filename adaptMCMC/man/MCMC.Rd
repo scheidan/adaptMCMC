@@ -18,7 +18,7 @@ MCMC(p, n, init, scale = rep(1, length(init)),
 \arguments{
   \item{p}{
     function that returns a value proportional to the log probability
-    density to sample from. Alternatively the function can return a list
+    density to sample from. Alternatively it can be a function that returns a list
     with at least one element named \code{log.density}. See details below.
   }
   \item{n}{
@@ -68,7 +68,9 @@ MCMC(p, n, init, scale = rep(1, length(init)),
   In some cases the function \code{p} may not only calculate the log
   density but return a list containing also other values. For example
   if \code{p} is a log posterior one may be also interested to store
-  the corresponding prior and likelihood values.
+  the corresponding prior and likelihood values. The function must
+  either return always a scalar or always a list, however, the length of
+  the list may vary.
 
 
 }
@@ -84,8 +86,8 @@ MCMC(p, n, init, scale = rep(1, length(init)),
     number of adaption steps.}
   \item{sampling.parameters}{a list with further sampling
     parameters. Mainly used by \code{MCMC.add.samples()}}.
-  \item{extra.values}{A list containing the lists provided by \code{p}.
-    Only if \code{p} provides a list.}
+  \item{extra.values}{A list containing additional return values provided by
+    \code{p}. Only if \code{p} provides a list.}
 }
 
 \references{
@@ -98,10 +100,11 @@ MCMC(p, n, init, scale = rep(1, length(init)),
 \author{Andreas Scheidegger, \email{andreas.scheidegger@eawag.ch} or
   \email{scheidegger.a@gmail.com}.
 
-  Thanks to David Pleydell for spotting an error in the previous version.
+  Thanks to David Pleydell and Venelin for spotting errors and providing
+  improvements.
 }
 
-\note{ Due to numerical errors it may happen that the computed
+\note{Due to numerical errors it may happen that the computed
   covariance matrix is not positive definite. In such a case the nearest positive
   definite matrix is calculated with \code{nearPD()}
   of the package \pkg{Matrix}.
@@ -130,11 +133,11 @@ p.log <- function(x) {
 
 ## 1) non-adaptive sampling
 samp.1 <- MCMC(p.log, n=200, init=c(0, 1), scale=c(1, 0.1),
-adapt=FALSE)
+               adapt=FALSE)
 
 ## 2) adaptive sampling
 samp.2 <- MCMC(p.log, n=200, init=c(0, 1), scale=c(1, 0.1),
-adapt=TRUE, acc.rate=0.234)
+               adapt=TRUE, acc.rate=0.234)
 
 
 ## ----------------------
