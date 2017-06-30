@@ -6,15 +6,14 @@
 Generic adaptive Monte Carlo Markov Chain sampler
 }
 \description{
-This package provides an implementation of the generic adaptive Monte
-Carlo Markov chain sampler proposed by Vihola (2011).
+Enables sampling from arbitrary distributions if the log density is known up to a constant; a common situation in the context of Bayesian inference. The implemented sampling algorithm was proposed by Vihola (2012) and achieves often a high efficiency by tuning the proposal distributions to a user defined acceptance rate.
 }
 \details{
 \tabular{ll}{
 Package: \tab adaptMCMC\cr
 Type: \tab Package\cr
 Version: \tab 1.2\cr
-Date: \tab 2017-06-21\cr
+Date: \tab 2017-06-30\cr
 License: \tab GPL (>= 2)\cr
 LazyLoad: \tab yes\cr
 }
@@ -30,10 +29,8 @@ The workhorse function is \code{\link{MCMC}}. Chains can be updated with
   \email{scheidegger.a@gmail.com}}
 
 \references{
-Vihola, M. (2011) Robust adaptive Metropolis algorithm with
-coerced acceptance rate. Statistics and Computing.
-[online] \url{http://www.springerlink.com/content/672270222w79h431/},
-(Accessed December 8, 2011)
+Vihola, M. (2012) Robust adaptive Metropolis algorithm with coerced acceptance rate.
+Statistics and Computing, 22(5), 997-1008. doi:10.1007/s11222-011-9269-5.
 }
 
 \seealso{

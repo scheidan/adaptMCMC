@@ -6,7 +6,7 @@
 }
 
 \description{
-Implementation of the robust adaptive Metropolis sampler of Vihola (2011).
+Implementation of the robust adaptive Metropolis sampler of Vihola (2012).
 }
 
 \usage{
@@ -91,10 +91,8 @@ MCMC(p, n, init, scale = rep(1, length(init)),
 }
 
 \references{
-  Vihola, M. (2011) Robust adaptive Metropolis algorithm with
-  coerced acceptance rate. Statistics and Computing.
-  [online] \url{http://www.springerlink.com/content/672270222w79h431/},
-  (Accessed: Jan 31, 2017)
+Vihola, M. (2012) Robust adaptive Metropolis algorithm with coerced acceptance rate.
+Statistics and Computing, 22(5), 997-1008. doi:10.1007/s11222-011-9269-5.
 }
 
 \author{Andreas Scheidegger, \email{andreas.scheidegger@eawag.ch} or
