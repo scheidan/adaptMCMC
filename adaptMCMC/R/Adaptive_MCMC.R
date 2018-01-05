@@ -46,14 +46,14 @@ MCMC <- function(p, n, init, scale=rep(1, length(init)),
     if(!"log.density" %in% names(val)) {
       stop("The list returned by 'p' must contain an element named 'log.density!'")
     }
-    if(length(val$log.density)>1) warning("The 'log.density' does not return a scalar value! Only the first element is used. This will be treated as an error in future versions!")
+    if(length(val$log.density)>1) stop("The list element 'log.density' must be a scalar value!")
     
     p.val[1] <- val$log.density
     extras[[1]] <- val["log.density" != names(val)]
     
   } else {
     returns.list <- FALSE
-    if(length(val)>1) warning("The 'log.density' does not return a scalar value! Only the first element is used. This will be treated as an error in future versions!")
+    if(length(val)>1) stop("The function 'p' must return a scalar value or a named list! See ?MCMC.!")
     p.val[1] <- val
   }
 

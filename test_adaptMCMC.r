@@ -16,7 +16,7 @@ load_all(package.path)
 
 
 ## run R CMD check
-## check(package.path)
+check(package.path)
 
 ## build(package.path)
 
