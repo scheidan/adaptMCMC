@@ -3,5 +3,5 @@ import(Matrix)
 import(parallel)
 import(coda)
 
-importFrom("stats", "rnorm", "runif")
+importFrom("stats", "rnorm", "runif", "rt")
 importFrom("utils", "setTxtProgressBar", "txtProgressBar")

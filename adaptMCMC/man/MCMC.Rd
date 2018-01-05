@@ -98,14 +98,14 @@ Statistics and Computing, 22(5), 997-1008. doi:10.1007/s11222-011-9269-5.
 \author{Andreas Scheidegger, \email{andreas.scheidegger@eawag.ch} or
   \email{scheidegger.a@gmail.com}.
 
-  Thanks to David Pleydell and Venelin for spotting errors and providing
+  Thanks to David Pleydell, Venelin, and Umberto Picchini for spotting errors and providing
   improvements.
 }
 
 \note{Due to numerical errors it may happen that the computed
   covariance matrix is not positive definite. In such a case the nearest positive
   definite matrix is calculated with \code{nearPD()}
-  of the package \pkg{Matrix}.
+  from the package \pkg{Matrix}.
 }
 
 \seealso{

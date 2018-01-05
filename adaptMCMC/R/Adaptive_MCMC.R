@@ -88,7 +88,7 @@ MCMC <- function(p, n, init, scale=rep(1, length(init)),
     }
 
     ## proposal value
-    U <- rnorm(d)
+    U <- rt(d, df=d)
     X.prop <- c( X[i-1,] + S %*% U )
     names(X.prop) <- names(init)
 
