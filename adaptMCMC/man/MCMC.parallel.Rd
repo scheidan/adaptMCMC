@@ -12,7 +12,7 @@ based on the \pkg{parallel} package.
 \usage{
 MCMC.parallel(p, n, init, n.chain = 4, n.cpu, packages = NULL, dyn.libs=NULL,
     scale = rep(1, length(init)),  adapt = !is.null(acc.rate),
-    acc.rate = NULL, gamma = 0.5, list = TRUE, ...)
+    acc.rate = NULL, gamma = 2/3, list = TRUE, ...)
 }
 
 \arguments{

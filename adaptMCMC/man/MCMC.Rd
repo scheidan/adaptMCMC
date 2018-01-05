@@ -11,7 +11,7 @@ Implementation of the robust adaptive Metropolis sampler of Vihola (2012).
 
 \usage{
 MCMC(p, n, init, scale = rep(1, length(init)),
-    adapt = !is.null(acc.rate), acc.rate = NULL, gamma = 0.5,
+    adapt = !is.null(acc.rate), acc.rate = NULL, gamma = 2/3,
     list = TRUE, showProgressBar=interactive(), n.start = 0, ...)
 }
 

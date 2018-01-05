@@ -15,12 +15,12 @@
 
 
 MCMC <- function(p, n, init, scale=rep(1, length(init)),
-                 adapt=!is.null(acc.rate), acc.rate=NULL, gamma=0.5, list=TRUE,
+                 adapt=!is.null(acc.rate), acc.rate=NULL, gamma=2/3, list=TRUE,
                  showProgressBar=interactive(), n.start=0, ...) {
 
   ## checks
   if(adapt & !is.numeric(acc.rate)) stop('Argument "acc.rate" is missing!')
-  if(gamma<0.5 | gamma>1) stop('Argument "gamma" must be between 0.5 and 1!')
+  if(gamma<=0.5 | gamma>1) stop('Argument "gamma" must be in (0.5, 1]!')
 
 
   ## number of adaption steps
@@ -143,7 +143,7 @@ MCMC <- function(p, n, init, scale=rep(1, length(init)),
   }
 
   if(showProgressBar){
-    close(pb)                             #close progress bar
+    close(pb)                             # close progress bar
   }
   
   ## calculate accpetance rate
@@ -223,7 +223,7 @@ MCMC.add.samples <- function(MCMC.object, n.update, ...) {
 ## Wrapper for parallel calculation of independent chains
 MCMC.parallel <- function(p, n, init, n.chain=4, n.cpu, packages=NULL, dyn.libs=NULL,
                           scale=rep(1, length(init)), adapt=!is.null(acc.rate),
-                          acc.rate=NULL, gamma=0.5, list=TRUE, ...) {
+                          acc.rate=NULL, gamma=2/3, list=TRUE, ...) {
 
   ## initialisation of (local) parallel computing
   cl <- makeCluster(min(n.cpu, detectCores()))
