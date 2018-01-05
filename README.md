@@ -38,4 +38,7 @@ summary(samp.2$samples)
 
 ## covariance of last jump distribution
 samp.2$cov.jump
+
+## plot chains and marginals
+plot(convert.to.coda(samp.2))
 ```
