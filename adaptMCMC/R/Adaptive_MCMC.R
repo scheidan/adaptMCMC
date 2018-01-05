@@ -125,7 +125,7 @@ MCMC <- function(p, n, init, scale=rep(1, length(init)),
     ## compute new S
     ii <- i+n.start
     if(ii < n.adapt) {
-      adapt.rate <-  min(5, d*ii^(-gamma))
+      adapt.rate <-  min(1, d*ii^(-gamma))
       M <- S %*% (diag(d) + adapt.rate*(alpha - acc.rate) * U%*%t(U)/sum(U^2)) %*% t(S)
 
       ## check if M is positive definite. If not, use nearPD().
