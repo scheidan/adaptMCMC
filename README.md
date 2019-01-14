@@ -1,3 +1,5 @@
+[![Research software impact](http://depsy.org/api/package/cran/adaptMCMC/badge.svg)](http://depsy.org/package/r/adaptMCMC)
+
 adaptMCMC
 =========
 
