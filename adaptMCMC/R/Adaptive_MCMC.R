@@ -142,7 +142,7 @@ MCMC <- function(p, n, init, scale=rep(1, length(init)),
   if(list) {
     res <- list(samples=X,
                 log.p=p.val,
-                cov.jump=M,
+                cov.jump=S %*% t(S),
                 n.sample=n,
                 acceptance.rate=acceptance.rate,
                 adaption=adapt,
