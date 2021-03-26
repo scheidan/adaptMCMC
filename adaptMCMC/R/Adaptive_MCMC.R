@@ -125,19 +125,9 @@ MCMC <- function(p, n, init, scale=rep(1, length(init)),
     ## compute new S
     ii <- i+n.start
     if(ii < n.adapt) {
-      adapt.rate <-  min(1, d*ii^(-gamma))
-      M <- S %*% (diag(d) + adapt.rate*(alpha - acc.rate) * U%*%t(U)/sum(U^2)) %*% t(S)
-
-      ## check if M is positive definite. If not, use nearPD().
-      eig <- eigen(M, only.values = TRUE)$values
-      tol <- ncol(M)*max(abs(eig))*.Machine$double.eps
-
-      if( !isSymmetric(M) | is.complex(eig) | !all(Re(eig)>tol) ){
-        ## nearPD() computes the 'nearest' positive definite matrix
-        M <- as.matrix(Matrix::nearPD(M)$mat)
-      }
-
-      S <- t(chol(M))
+      
+      # ramcmc package performs rank 1 cholesky update/downdate as required
+      S <- ramcmc::adapt_S(S, U, alpha, ii, acc.rate, gamma)
 
     }
   }
