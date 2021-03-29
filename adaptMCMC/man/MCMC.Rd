@@ -98,8 +98,9 @@ Statistics and Computing, 22(5), 997-1008. doi:10.1007/s11222-011-9269-5.
 \author{Andreas Scheidegger, \email{andreas.scheidegger@eawag.ch} or
   \email{scheidegger.a@gmail.com}.
 
-  Thanks to David Pleydell, Venelin, and Umberto Picchini for spotting errors and providing
-  improvements.
+  Thanks to David Pleydell, Venelin, and Umberto Picchini for spotting
+  errors and providing improvements. Ian Taylor implemented the usage of
+  \code{\link[ramcmc]{adapt_S}} which lead to a nice speedup.
 }
 
 \note{Due to numerical errors it may happen that the computed

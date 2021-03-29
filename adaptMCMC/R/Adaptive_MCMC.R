@@ -126,7 +126,7 @@ MCMC <- function(p, n, init, scale=rep(1, length(init)),
     ii <- i+n.start
     if(ii < n.adapt) {
       
-      # ramcmc package performs rank 1 cholesky update/downdate as required
+      ## ramcmc package performs rank 1 cholesky update/downdate as required
       S <- ramcmc::adapt_S(S, U, alpha, ii, acc.rate, gamma)
 
     }

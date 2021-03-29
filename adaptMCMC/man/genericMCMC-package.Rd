@@ -12,8 +12,8 @@ Enables sampling from arbitrary distributions if the log density is known up to 
 \tabular{ll}{
 Package: \tab adaptMCMC\cr
 Type: \tab Package\cr
-Version: \tab 1.2\cr
-Date: \tab 2017-06-30\cr
+Version: \tab 1.4\cr
+Date: \tab 2021-03-29\cr
 License: \tab GPL (>= 2)\cr
 LazyLoad: \tab yes\cr
 }

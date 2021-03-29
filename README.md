@@ -10,7 +10,7 @@ R package that provides an implementation of the generic adaptive Monte Carlo Ma
 ```R
 library(adaptMCMC)
 
-## ----------------------
+## ---------------------
 ## Define (non-normalized) log density
 
 ## log-pdf to sample from
