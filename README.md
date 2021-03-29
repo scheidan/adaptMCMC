@@ -44,3 +44,7 @@ samp.2$cov.jump
 ## plot chains and marginals
 plot(convert.to.coda(samp.2))
 ```
+
+## References
+
+Vihola, M., 2011. Robust adaptive Metropolis algorithm with coerced acceptance rate. Statistics and Computing. https://doi.org/10.1007/s11222-011-9269-5
