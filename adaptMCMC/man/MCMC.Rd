@@ -111,10 +111,6 @@ Statistics and Computing, 22(5), 997-1008. doi:10.1007/s11222-011-9269-5.
 
 \seealso{
   \code{\link{MCMC.parallel}}, \code{\link{MCMC.add.samples}}
-
-  The package \code{HI} provides an adaptive rejection Metropolis sampler
-  with the function \code{\link[HI]{arms}}. See also
-  \code{\link[MHadaptive]{Metro_Hastings}} of the \code{MHadaptive} package.
 }
 \examples{
 ## ----------------------
